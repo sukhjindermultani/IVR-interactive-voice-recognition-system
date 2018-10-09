@@ -1,0 +1,1 @@
+"use strict";MetronicApp.controller("TodoController",["$rootScope","$scope","$http","$timeout",function(a,b,c,d){b.$on("$viewContentLoaded",function(){Metronic.initAjax()}),a.settings.layout.pageSidebarClosed=!0}]);

@@ -1,0 +1,943 @@
+<div ng-controller="AccountController">
+<script type="text/ng-template" id="addAgentModal.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Add Account</h3>
+    </div>
+    <div class="modal-body">
+    	<!-- ng-submit="submitForm(addAccount.$valid)" --> <form role="form" class="form-horizontal" novalidate name="addAccount" >
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="accountName">Name</label>
+				<div class="col-md-6">
+					<input type="text" placeholder="Name" id="AccountName" name="accountName" class="form-control" ng-model="newAccount.name" ng-required="true">
+				</div>
+			<p ng-show="addAccount.name.$invalid && !addAccount.name.$pristine" class="help-block">Acount name is required.</p>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="realm">Realm</label>
+				<div class="col-md-6">
+					<input type="text" placeholder="Realm (Unique)" id="realm" name="realm" class="form-control" ng-model="newAccount.realm" ng-required="true">
+				</div>
+			<p ng-show="addAccount.realm.$error.required && !addAccount.realm.$pristine" class="help-block">Realm is required.</p>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="credits">Credits</label>
+				<div class="col-md-6">
+					<input type="number" placeholder="Credits" id="credits" name="credits" class="form-control" ng-model="newAccount.credits" ng-required="true">
+				</div>
+			<p ng-show="addAccount.credits.$error.required && !addAccount.credits.$pristine" class="help-block">Credits is required.</p>
+			</div>
+		</form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="addAccountFn(addAccount.$valid)" ng-disabled="addAccount.$invalid">Add Account</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+
+
+<script type="text/ng-template" id="addNumberModal.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Add Number</h3>
+    </div>
+    <div class="modal-body">
+    	<!-- ng-submit="submitForm(addNumber.$valid)" --> <form role="form" class="form-horizontal" novalidate name="addNumber" >
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="number">Number</label>
+				<div class="col-md-6">
+					<input type="text" placeholder="Add Number" id="number" name="number" class="form-control" ng-model="newNumber.number" ng-required="true">
+				</div>
+			<p ng-show="addNumber.number.$invalid && !addNumber.number.$pristine" class="help-block">Number is required.</p>
+			</div>
+		</form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="addNumberFn(addNumber.$valid)" ng-disabled="addAccount.$invalid">Add Number</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+
+
+
+<script type="text/ng-template" id="viewUsersModal.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Users</h3>
+    </div>
+    <div class="modal-body">
+    	<table class="table table-hover" id = "UsrTable">
+    		<thead class="accountTableHead">
+    			<th> Name </th>
+    			<th> Email </th>
+    			<th> Action </th>
+    		</thead>
+          <tbody ng-repeat="user in users">            
+                <tr class ="accountsList" id="accounts_{{user.id}}" >
+                    <td id ="phn_number">{{user.name}}</td> 
+                    <td id ="phn_number">{{user.email}}</td> 
+                    <td id = "action">
+                      <span class="btn btn-default"  ng-click="EditUser(user.id)"><i class="fa fa-pencil-square-o"></i></span>
+                      <span class="btn btn-default"  ng-click="DeleteUser(user.id)"><i class="fa fa-trash"></i></span>
+                    </td>
+                </tr>           
+          </tbody>
+      </table>  
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+
+
+
+
+
+<script type="text/ng-template" id="addUserModal.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Add User</h3>
+    </div>
+    <div class="modal-body">
+    	<!-- ng-submit="submitForm(addUser.$valid)" --> <form role="form" class="form-horizontal" novalidate name="addUser" >
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="username">Username</label>
+				<div class="col-md-6">
+					<input type="text" placeholder="Name" id="username" name="username" class="form-control" ng-model="newUser.username" ng-required="true">
+				</div>
+			<p ng-show="addUser.username.$invalid.required && !addUser.username.$pristine" class="help-block">Username is required.</p>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="realm">First Name</label>
+				<div class="col-md-6">
+					<input type="text" placeholder="First Name" id="firstname" name="firstname" class="form-control" ng-model="newUser.firstname" ng-required="true">
+				</div>
+			<p ng-show="addUser.firstname.$error.required && !addUser.firstname.$pristine" class="help-block">First Name is required.</p>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="lastname">Last Name</label>
+				<div class="col-md-6">
+					<input type="text" placeholder="Last Name" id="lastname" name="lastname" class="form-control" ng-model="newUser.lastname" ng-required="true">
+				</div>
+			<p ng-show="addUser.lastname.$error.required && !addUser.lastname.$pristine" class="help-block">Last Name is required.</p>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="email">Email</label>
+				<div class="col-md-6">
+					<input type="email" placeholder="Email" id="email" name="email" class="form-control" ng-model="newUser.email" ng-required="true" ng-change="checkData()">
+					<p id="emailValid"></p>
+				</div>
+			<p ng-show="addUser.email.$error.required && !addUser.email.$pristine" class="help-block">Email is required.</p>
+			<p ng-show="addUser.email.$error.email" class="help-block">Your email is not valid.</p>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="email">User Privilege Level </label>
+				<div class="col-md-6">
+					<select id="priv_level" name="priv_level" class="form-control" ng-model="newUser.priv_level">
+						<option value="admin">Administrator</option>
+						<option value="user" selected>User</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="email">Email Notification </label>
+				<div class="col-md-6">
+					<div class="col-md-6">
+					  	<label><input type="checkbox" value="voicemail" ng-model = "newUser.voicemail" id ="vm">VoiceMail</label>
+					</div>
+					<div class="col-md-6">
+					 	<label><input type="checkbox" value="fax" ng-model ="newUser.fax" id = "fax">Fax</label>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="email">Password </label>
+				<div class="col-md-6">
+					<input type="password" placeholder="Password" id="password" name="password" class="form-control" ng-model="newUser.password" ng-required="true">
+				</div>
+				<p ng-show="addUser.password.$error.required && !addUser.password.$pristine" class="help-block">Password is required.</p>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="email"> </label>
+				<div class="col-md-6">
+					<div class="col-md-6">
+					  	<label><input type="checkbox" value="voicemail" ng-model = "newUser.call_fwd" id ="call_fwd">Call Forward</label>
+					</div>
+				</div>
+			</div>
+
+			 <div class="form-group">
+			    <label class="col-md-3 control-label" for="notification">Notifications</label>
+			    <div class="col-md-6">
+			      <label class="checkbox" for="notification-0">
+			        <input type="checkbox" name="email_notification" id="email_notification"  ng-model="newUser.email_notification">
+			        Email Notification
+			      </label>
+			      <label class="checkbox" for="notification-1">
+			        <input type="checkbox" name="sms_notification" id="sms_notification" ng-model="newUser.sms_notification">
+			        Sms Notification
+			      </label>
+			    </div>
+			  </div> 
+
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="email">Call Forward Number </label>
+				<div class="col-md-6">
+					<input type="text" placeholder="Call Forward Number" id="call_fwd" name="call_fwd" class="form-control" ng-model="newUser.number">
+				</div>
+
+			</div>
+		</form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="addUsrFn(addUser.$valid)" ng-disabled="addUser.$invalid">Add User</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+
+
+
+
+<script type="text/ng-template" id="EditUserModal.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Edit User</h3>
+    </div>
+    <div class="modal-body">
+    	<!-- ng-submit="submitForm(addUser.$valid)" --> <form role="form" class="form-horizontal" novalidate name="addUser" >
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="username">Username</label>
+				<div class="col-md-6">
+					<input type="text" placeholder="Name" id="username" name="username" class="form-control" ng-model="newUser.username" ng-required="true">
+				</div>
+			<p ng-show="addUser.username.$invalid.required && !addUser.username.$pristine" class="help-block">Username is required.</p>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="realm">First Name</label>
+				<div class="col-md-6">
+					<input type="text" placeholder="First Name" id="firstname" name="firstname" class="form-control" ng-model="newUser.firstname" ng-required="true">
+				</div>
+			<p ng-show="addUser.firstname.$error.required && !addUser.firstname.$pristine" class="help-block">First Name is required.</p>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="lastname">Last Name</label>
+				<div class="col-md-6">
+					<input type="text" placeholder="Last Name" id="lastname" name="lastname" class="form-control" ng-model="newUser.lastname" ng-required="true">
+				</div>
+			<p ng-show="addUser.lastname.$error.required && !addUser.lastname.$pristine" class="help-block">Last Name is required.</p>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="email">Email</label>
+				<div class="col-md-6">
+					<input type="email" placeholder="Email" id="email" name="email" class="form-control" ng-model="newUser.email" ng-required="true">
+				</div>
+			<p ng-show="addUser.email.$error.required && !addUser.email.$pristine" class="help-block">Email is required.</p>
+			<p ng-show="addUser.email.$error.email" class="help-block">Your email is not valid.</p>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="email">User Privilege Level </label>
+				<div class="col-md-6">
+					<select id="priv_level" name="priv_level" class="form-control" ng-model="newUser.priv_level">
+						<option value="admin">Administrator</option>
+						<option value="user" >User</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="email">Email Notification </label>
+				<div class="col-md-6">
+					<div class="col-md-6">
+					  	<label><input type="checkbox" value="voicemail" ng-model = "newUser.voicemail" id ="vm">VoiceMail</label>
+					</div>
+					<div class="col-md-6">
+					 	<label><input type="checkbox" value="fax" ng-model ="newUser.fax" id = "fax">Fax</label>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="email">Password </label>
+				<div class="col-md-6">
+					<input type="text" placeholder="Password" id="password" name="password" class="form-control" ng-model="newUser.password" >
+				</div>
+				<p ng-show="addUser.password.$error.required && !addUser.password.$pristine" class="help-block">Password is required.</p>
+				
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="email"> </label>
+				<div class="col-md-6">
+					<div class="col-md-6">
+					  	<label><input type="checkbox" value="voicemail" ng-model = "newUser.call_fwd" id ="call_fwd">Call Forward</label>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="email">Call Forward Number </label>
+				<div class="col-md-6">
+					<input type="text" placeholder="Call Forward Number" id="call_fwd" name="call_fwd" class="form-control" ng-model="newUser.number">
+				</div>
+
+			</div>
+
+			<div class="form-group">
+		        <label class="col-md-3 control-label" for="notification">Notifications</label>
+		          <div class="col-md-6">
+		            <label class="checkbox" for="notification-0">
+		            <input type="checkbox" name="email_notification" id="email_notification"  ng-model="newUser.email_notification">
+		              Email Notification
+		            </label>
+		            <label class="checkbox" for="notification-1">
+		            <input type="checkbox" name="sms_notification" id="sms_notification"  ng-model="newUser.sms_notification">
+		              Sms Notification
+		          </div>
+		        </label>
+		    </div>
+
+
+		</form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="EditUsrFn(addUser.$valid)" ng-disabled="addUser.$invalid">Update</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+
+<script type="text/ng-template" id="viewNumbersModal.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Numbers</h3>
+    </div>
+    <div class="modal-body">
+      <table class="table table-hover" id = "NmbrTable">
+        <thead class="accountTableHead">
+          <th> DT Number  </th>
+          <th> Caller Id Number  </th>
+        </thead>
+          <tbody ng-repeat="phn in phone_numbers">            
+                <tr class ="accountsList"> 
+                    <td id ="phn_number">{{phn.dt_number}}</td>
+                    <td id ="phn_number">{{phn.caller_id_number}}</td> 
+                </tr>           
+          </tbody>
+      </table>  
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+
+<script type="text/ng-template" id="editClientModal.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Edit Client Profile</h3>
+    </div>
+    <div class="modal-body">
+      <!-- ng-submit="submitForm(newClient.$valid)" --> <form role="form" class="form-horizontal" novalidate name="addAccount" >
+          <div class="form-group">
+      <label class="col-md-3 control-label"  for="account_name">Account Name</label>
+      <div class="col-md-6">
+        <input id="account_name" name="account_name" class="form-control" type="text" placeholder="Name"  ng-model="newClient.account_name" readonly>
+      </div>
+    </div> 
+
+    <div class="form-group">
+    <label class="col-md-3 control-label" for="email">User Id (email)</label>
+    <div class="col-md-6">
+      <input id="email" name="email" type="text" placeholder="Email" class="form-control" ng-model="newClient.email" ng-change="checkData()" readonly>
+      <p id="emailValid"></p>
+    </div>
+  </div>
+
+  <!-- Password input-->
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="password">Password</label>
+    <div class="col-md-6">
+      <input id="password" name="password" type="text" placeholder="Password" class="form-control" ng-model="newClient.password" required>
+      
+    </div>
+  </div>
+   
+
+    <div class="form-group">
+      <label class="col-md-3 control-label"  for="first_name">First Name</label>
+      <div class="col-md-6">
+        <input id="first_name" name="first_name" class="form-control" type="text" placeholder="Name"  ng-model="newClient.first_name" required>
+      </div>
+    </div>
+
+  <!-- Text input-->
+  <div class="form-group">
+    <label class="col-md-3 control-label"  for="last_name">Last Name</label>
+    <div class="col-md-6">
+      <input id="last_name" name="last_name" type="text" placeholder="Last Name" class="form-control" ng-model="newClient.last_name" required>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-3 control-label"  for="mobile_number">Mobile Number</label>
+    <div class="col-md-6">
+      <input id="mobile_number" name="mobile_number" type="text" placeholder="Mobile Number" class="form-control" ng-model="newClient.mobile_number" required>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-3 control-label"  for="mobile_number"></label>
+    <div class="col-md-6">
+      <input type="checkbox" name="call_forward" id="call_forward" value="Email Notification" ng-model="newClient.call_forward_enabled">
+        use mobile number to call forward
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="job_title">Job Title</label>
+    <div class="col-md-6">
+      <select id="job_title" name="job_title" class="form-control" ng-model="newClient.job_title" >
+        <option value="1">CEO</option>
+        <option value="2">Manager</option>
+        <option value="3">Administration Manager</option>
+        <option value="4">Group Head</option>
+        <option value="5">IT Administrator</option>
+        <option value="6">General Manager</option>
+        <option value="7">Group Head</option>
+        <option value="8">Proprietor</option>
+        <option value="9">Partner</option>
+        <option value="10">Authorised Person</option>
+        <option value="11">Managing Director</option>
+        <option value="12">Others</option>
+      </select>
+    </div>
+  </div>
+
+  
+  <div class="form-group">
+    <label class="col-md-3 control-label"  for="company">Company Name</label>
+    <div class="col-md-6">
+      <input id="company_name" name="company_name" type="text" placeholder="Company Name" class="form-control" ng-model="newClient.company_name" required>
+    </div>
+  </div>
+
+
+  <!-- Textarea -->
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="address">Address</label>
+    <div class="col-md-6">                     
+      <textarea id="address" name="address" rows="5" cols="35" ng-model="newClient.address" required>Your Address</textarea>
+    </div>
+  </div>
+
+  <!-- Text input-->
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="zip_code">Post/Zip Code</label>
+    <div class="col-md-6">
+      <input id="zip_code" name="zip_code" type="text" placeholder="Post/Zip Code" class="form-control" ng-model="newClient.zip_code" >
+      
+    </div>
+  </div>
+
+  <!-- Text input-->
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="city">City</label>
+    <div class="col-md-6">
+      <input id="city" name="city" type="text" placeholder="City" class="form-control" ng-model="newClient.city" >
+      
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="state">State</label>
+    <div class="col-md-6">
+      <input id="state" name="state" type="text" placeholder="State" class="form-control"  ng-model="newClient.state" >
+      
+    </div>
+  </div>
+
+
+
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="country">Country</label>
+    <div class="col-md-6">
+      <input id="country" name="country" type="text" placeholder="Country" class="form-control"  ng-model="newClient.country" >
+      
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="company_phone">Company Phone</label>
+    <div class="col-md-6">
+      <input id="company_phone" name="company_phone" type="text" placeholder="Company Phone" class="form-control"  ng-model="newClient.company_phone" >
+      
+    </div>
+  </div>
+
+  <!-- Text input
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="dat_joining">Date Of Joining/Contract</label>
+    <div class="col-md-6">
+      <input id="date_joining" name="date_joining" type="text" placeholder="Date Of Joining" class="form-control" >
+      
+    </div>
+  </div>-->
+
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="nature_of_business">Nature Of Business</label>
+    <div class="col-md-6">
+      <select id="nature_of_business" name="nature_of_business" class="form-control" ng-model="newClient.nature_of_business" required>
+        <option value="1">A</option>
+        <option value="2">B</option>
+        <option value="3">C</option>
+        <option value="4">D</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="job_title">No. Of Employees</label>
+    <div class="col-md-6">
+      <select id="number_of_employees" name="number_of_employees" class="form-control" ng-model="newClient.number_of_employees" >
+        <option value="1">1 - 10</option>
+        <option value="2">11 - 50</option>
+        <option value="3">51 - 100</option>
+        <option value="4">101 - 500</option>
+        <option value="5">Above 500</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="annual_turnover">Annual Turnover</label>
+    <div class="col-md-6">
+      <select id="annual_turnover" name="annual_turnover" class="form-control" ng-model="newClient.annual_turnover" >
+        <option value="1">1 - 5 lacs</option>
+        <option value="2">6 - 20 lacs</option>
+        <option value="3">21 - 50 lacs</option>
+        <option value="4">51 lacs - 1 crore</option>
+        <option value="6">1 - 5 crores</option>
+        <option value="7">6 - 25 crores</option>
+        <option value="8">Above 25 crores</option>
+      </select>
+    </div>
+  </div>
+
+
+  <!-- Text input-->
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="date_joining">Date of Joining</label>
+    <div class="col-md-6">
+      <input id="date_joining" name="date_joining" type="text" placeholder="Date Of Joining" class="form-control" datepickerjoin data-ng-model="date_from" >
+    </div>
+  </div>
+  <!-- Multiple Checkboxes -->
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="notification">Notifications</label>
+    <div class="col-md-6">
+      <label class="checkbox" for="notification-0">
+        <input type="checkbox" name="email_notification" id="email_notification" value="Email Notification" ng-model="newClient.email_notification">
+        Email Notification
+      </label>
+      <label class="checkbox" for="notification-1">
+        <input type="checkbox" name="sms_notification" id="sms_notification" value="Sms Notification" ng-model="newClient.sms_notification">
+        Sms Notification
+      </label>
+	   <label class="checkbox" for="notification-2">
+			<input type="checkbox" name="sms_notification_for_caller" id="sms_notification_for_caller" value="Sms Notification For Caller" ng-model="newClient.sms_notification_for_caller">
+			Sms Notification For Caller
+	    </label>
+    </div>
+  </div>
+    </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" id="addButton" ng-click="updateClient(newClient.$valid)" ng-disabled="newClient.$invalid">Update Profile</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+
+<script type="text/ng-template" id="addClientModal.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Add Profile</h3>
+    </div>
+    <div class="modal-body">
+    	<!-- ng-submit="submitForm(newClient.$valid)" --> <form role="form" class="form-horizontal" novalidate name="addAccount" >
+
+    <div class="form-group">
+      <label class="col-md-3 control-label"  for="account_name">Account Name</label>
+      <div class="col-md-6">
+        <input id="account_name" name="account_name" class="form-control" type="text" placeholder="Name"  ng-model="newClient.account_name" >
+      </div>
+    </div> 
+
+    <div class="form-group">
+    <label class="col-md-3 control-label" for="email">User Id (email)</label>
+    <div class="col-md-6">
+      <input id="email" name="email" type="text" placeholder="Email" class="form-control" ng-model="newClient.email"  ng-change="checkData()">
+      <p id="emailValid"></p>
+    </div>
+  </div>
+
+  <!-- Password input-->
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="password">Password</label>
+    <div class="col-md-6">
+      <input id="password" name="password" type="password" placeholder="Password" class="form-control" ng-model="newClient.password" required>
+      
+    </div>
+  </div>
+   
+
+		<div class="form-group">
+      <label class="col-md-3 control-label"  for="first_name">First Name</label>
+      <div class="col-md-6">
+        <input id="first_name" name="first_name" class="form-control" type="text" placeholder="Name"  ng-model="newClient.first_name" required>
+      </div>
+    </div>
+
+  <!-- Text input-->
+  <div class="form-group">
+    <label class="col-md-3 control-label"  for="last_name">Last Name</label>
+    <div class="col-md-6">
+      <input id="last_name" name="last_name" type="text" placeholder="Last Name" class="form-control" ng-model="newClient.last_name" required>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-3 control-label"  for="mobile_number">Mobile Number</label>
+    <div class="col-md-6">
+      <input id="mobile_number" name="mobile_number" type="text" placeholder="Mobile Number" class="form-control" ng-model="newClient.mobile_number" required>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-3 control-label"  for="mobile_number"></label>
+    <div class="col-md-6">
+      <input type="checkbox" name="call_forward" id="call_forward" value="Email Notification" ng-model="newClient.call_forward_enabled">
+        use mobile number to call forward
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="job_title">Job Title</label>
+    <div class="col-md-6">
+      <select id="job_title" name="job_title" class="form-control" ng-model="newClient.job_title" >
+        <option value="1">CEO</option>
+        <option value="2">Manager</option>
+        <option value="3">Administration Manager</option>
+        <option value="4">Group Head</option>
+        <option value="5">IT Administrator</option>
+        <option value="6">General Manager</option>
+        <option value="7">Group Head</option>
+        <option value="8">Proprietor</option>
+        <option value="9">Partner</option>
+        <option value="10">Authorised Person</option>
+        <option value="11">Managing Director</option>
+        <option value="12">Others</option>
+      </select>
+    </div>
+  </div>
+
+  
+  <div class="form-group">
+    <label class="col-md-3 control-label"  for="company">Company Name</label>
+    <div class="col-md-6">
+      <input id="company_name" name="company_name" type="text" placeholder="Company Name" class="form-control" ng-model="newClient.company_name" required>
+    </div>
+  </div>
+
+
+  <!-- Textarea -->
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="address">Address</label>
+    <div class="col-md-6">                     
+      <textarea id="address" name="address" rows="5" cols="35" ng-model="newClient.address" required>Your Address</textarea>
+    </div>
+  </div>
+
+  <!-- Text input-->
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="zip_code">Post/Zip Code</label>
+    <div class="col-md-6">
+      <input id="zip_code" name="zip_code" type="text" placeholder="Post/Zip Code" class="form-control" ng-model="newClient.zip_code" >
+      
+    </div>
+  </div>
+
+  <!-- Text input-->
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="city">City</label>
+    <div class="col-md-6">
+      <input id="city" name="city" type="text" placeholder="City" class="form-control" ng-model="newClient.city" >
+      
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="state">State</label>
+    <div class="col-md-6">
+      <input id="state" name="state" type="text" placeholder="State" class="form-control"  ng-model="newClient.state" >
+      
+    </div>
+  </div>
+
+
+
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="country">Country</label>
+    <div class="col-md-6">
+      <input id="country" name="country" type="text" placeholder="Country" class="form-control"  ng-model="newClient.country" >
+      
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="company_phone">Company Phone</label>
+    <div class="col-md-6">
+      <input id="company_phone" name="company_phone" type="text" placeholder="Company Phone" class="form-control"  ng-model="newClient.company_phone" >
+      
+    </div>
+  </div>
+
+  <!-- Text input
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="dat_joining">Date Of Joining/Contract</label>
+    <div class="col-md-6">
+      <input id="date_joining" name="date_joining" type="text"  class="form-control" ng-model="newClient.date_of_joining" required>
+      
+    </div>
+  </div>-->
+
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="nature_of_business">Nature Of Business</label>
+    <div class="col-md-6">
+      <select id="nature_of_business" name="nature_of_business" class="form-control" ng-model="newClient.nature_of_business" required>
+        <option value="1">A</option>
+        <option value="2">B</option>
+        <option value="3">C</option>
+        <option value="4">D</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="job_title">No. Of Employees</label>
+    <div class="col-md-6">
+      <select id="number_of_employees" name="number_of_employees" class="form-control" ng-model="newClient.number_of_employees" >
+        <option value="1">1 - 10</option>
+        <option value="2">11 - 50</option>
+        <option value="3">51 - 100</option>
+        <option value="4">101 - 500</option>
+        <option value="5">Above 500</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="annual_turnover">Annual Turnover</label>
+    <div class="col-md-6">
+      <select id="annual_turnover" name="annual_turnover" class="form-control" ng-model="newClient.annual_turnover" >
+        <option value="1">1 - 5 lacs</option>
+        <option value="2">6 - 20 lacs</option>
+        <option value="3">21 - 50 lacs</option>
+        <option value="4">51 lacs - 1 crore</option>
+        <option value="6">1 - 5 crores</option>
+        <option value="7">6 - 25 crores</option>
+        <option value="8">Above 25 crores</option>
+      </select>
+    </div>
+  </div>
+
+
+  <!-- Text input-->
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="date_joining">Date of Joining</label>
+    <div class="col-md-6">
+      <input id="date_joining" name="date_joining" type="text" placeholder="Date Of Joining" class="form-control"  datepickerfrom data-ng-model="date_from" >
+    </div>
+  </div>
+  <!-- Multiple Checkboxes -->
+  <div class="form-group">
+    <label class="col-md-3 control-label" for="notification">Notifications</label>
+    <div class="col-md-6">
+      <label class="checkbox" for="notification-0">
+        <input type="checkbox" name="email_notification" id="email_notification" value="Email Notification" ng-model="newClient.email_notification">
+        Email Notification
+      </label>
+      <label class="checkbox" for="notification-1">
+        <input type="checkbox" name="sms_notification" id="sms_notification" value="Sms Notification" ng-model="newClient.sms_notification">
+        Sms Notification
+      </label>
+    </div>
+  </div>
+		</form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" id="addButton" ng-click="AddClient(newClient.$valid)" ng-disabled="newClient.$invalid">Save Profile</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+
+	<div class="container" id="client_container">
+		<div id = "AccountDiv">
+			<!-- <div class="form-group">        
+		        <button type="submit" class="btn btn-primary" ng-click="open();" id ="AccountAdd" > + Add Account</button>
+			</div> -->
+			<div>
+				<table class="table table-hover" id = "accountsTable">
+					<thead class="accountTableHead">
+						<th> Account Name </th>
+						<th> Numbers </th>
+						<th> Users </th>
+						<th> Action </th>
+					</thead>
+				    <tbody ng-repeat="acc in AllAccounts">			    	
+					        <tr class ="accountsList" id="accounts_{{acc.account_id}}" >
+					            <td id ="accountName">{{acc.name}}</td>	
+					            <td id = "addNmbr">
+					            	<span class="btn btn-default"  ng-click="AddNewNmbr(acc.account_id)"><i class="fa fa-plus"></i></span>
+					            	<span class="btn btn-default"  ng-click="ViewNumbers(acc.account_id)"><i class="fa fa-eye"></i></span>
+					            </td>
+					            <td id = "addUsr">
+					            	<span class="btn btn-default"  ng-click="AddNewUsr(acc.account_id, acc.name)"><i class="fa fa-plus"></i></span>
+					            	<span class="btn btn-default"  ng-click="ViewUsers(acc.account_id, acc.name)"><i class="fa fa-eye"></i></span>
+					            </td>
+					             <td id = "accountAction">
+					            	<span class="btn btn-default"  ng-click="deleteAcc(acc.account_id, acc.name)"><i class="fa fa-trash"></i></span>
+					            </td>
+					        </tr>				    
+				    </tbody>
+				</table>  
+			</div>
+		</div>
+
+
+		<div id = "AgentDiv">
+			<!-- <div class="form-group">        
+		        <button type="submit" class="btn btn-primary" ng-click="AddNewUsr(AgentAccountId,AgentAccountName);" id ="UserAdd" > + Add User</button>
+			</div> -->
+			<div>
+				<table class="table table-hover" id = "accountsTable">
+					<thead class="accountTableHead">
+						<th> Account Name </th>
+						<th> Numbers </th>
+						<th> Profile </th>
+						<th> Users </th>
+					</thead>
+				    <!-- <tbody ng-repeat="user in users">             -->
+		                <tr class ="accountsList" id="accounts_{{user.id}}" >
+		                    <td id ="phn_number">{{AgentAccountName}}</td> 
+		                    <!-- <td id = "action">
+		                      <span class="btn btn-default"  ng-click="EditUser(user.id)"><i class="fa fa-pencil-square-o"></i></span>
+		                      <span class="btn btn-default"  ng-click="DeleteUser(user.id)"><i class="fa fa-trash"></i></span>
+		                    </td> -->
+		                    <td id ="phn_number">
+                          		<span class="btn btn-default"  ng-click="ViewNumbers(AgentAccountId)"><i class="fa fa-eye"></i></span>
+                        	</td>
+                        	<td id ="phn_number" >
+	                          	<div ng-show="ExistClient(AgentAccountId)">
+	                            	<span style="width:40px !important;"  class="btn btn-default" id="id_add_{{AgentAccountId}}"  ng-click="addProfile(AgentAccountId, AgentAccountName)"><i class="fa fa-plus"></i></span>
+	                            	<span style="width:40px !important;" class="btn btn-default" id="id_edit_{{AgentAccountId}}"  ng-click="EditClient(AgentAccountId, AgentAccountName)"><i class="fa fa-pencil-square-o"></i></span>   
+	                          	</div> 
+	                        </td>
+	                        <td id = "addUsr">
+                          		<span class="btn btn-default"  ng-click="AddNewUsr(AgentAccountId, AgentAccountName)"><i class="fa fa-plus"></i></span>
+                          		<span class="btn btn-default"  ng-click="ViewUsers(AgentAccountId, AgentAccountName)"><i class="fa fa-eye"></i></span>
+                        	</td>
+
+		                </tr>           
+		          <!-- </tbody> -->
+				</table>  
+			</div>
+		</div>
+
+
+
+
+
+
+
+
+
+		
+		<!-- <div id ="addAccount_div">
+		  <h2> Add Account</h2>
+		  <form class="form-horizontal" role="form" id="addAccount" ng-submit="addAccount();">
+		  	<div class="form-group">
+		      <label class="control-label col-sm-2" for="name">Name : </label>
+		      <div class="col-sm-10">
+		        <input type="text" class="form-control" id="name" placeholder="Name" ng-model="name" required>
+		      </div>
+		    </div>
+		    <div class="form-group">
+		      <label class="control-label col-sm-2" for="realm">Realm : </label>
+		      <div class="col-sm-10">          
+		        <input type="text" class="form-control" id="realm" placeholder="Realm (Unique)" ng-model="realm" required>
+		      </div>
+		    </div> -->
+		    <!-- <div class="form-group">
+		      <label class="control-label col-sm-2" for="email">Email:</label>
+		      <div class="col-sm-10">
+		        <input type="email" class="form-control" id="email" placeholder="Enter Email" ng-model="email" required>
+		      </div>
+		    </div>
+		    <div class="form-group">
+		      <label class="control-label col-sm-2" for="username">Username:</label>
+		      <div class="col-sm-10">
+		        <input type="text" class="form-control" id="username" placeholder="Enter Username" ng-model="username" required>
+		      </div>
+		    </div>
+		    <div class="form-group">
+		      <label class="control-label col-sm-2" for="pwd">Password:</label>
+		      <div class="col-sm-10">          
+		        <input type="password" class="form-control" id="pwd" placeholder="Enter password" ng-model="password" required>
+		      </div>
+		    </div>
+		    <div class="form-group">
+		      <label class="control-label col-sm-2" for="pwd">Account Name:</label>
+		      <div class="col-sm-10">          
+		        <input type="text" class="form-control" id="account_name" placeholder="admin change" ng-model = "account_name" value="myAccount1" readonly >
+		      </div>
+		    </div> -->
+		   <!--  <div class="form-group">        
+		      <div class="col-sm-offset-2 col-sm-10">
+		        <button type="submit" class="btn btn-primary">Save</button>
+		      </div>
+		    </div>
+		  </form>
+		</div> -->
+
+
+		<!-- <div id="mailSms_div">
+			<form class="form-inline" ng-submit="updateEmailContent();">
+				<div class="form-group">
+				      <label class="control-label col-sm-6" for="email" style="margin-bottom:5px !important;">Email Content:</label>
+				      <div class="col-sm-10">
+				        <textarea class="form-control" id="emailContent" placeholder="Enter Email Content" rows="5" cols="50" ng-model="emailContent" required></textarea>
+				      </div>
+				</div>
+				<button type="submit" class="btn btn-primary">Save</button>
+			</form>
+			<br>
+			<form class="form-inline" ng-submit="updateSmsContent();">
+			    <div class="form-group">
+			      <label class="control-label col-sm-6" for="username" style="margin-bottom:5px !important;" >Sms Content:</label>
+			      	<div class="col-sm-10">
+			        	<textarea class="form-control" id="smsContent" placeholder="Enter SMS Content" rows="5" cols="50" ng-model="smsContent" required></textarea>
+			      	</div>
+			    </div>
+			    <button type="submit" class="btn btn-primary">Save</button>
+			</form>
+			<div class="form-group">
+				*Note : Please use CALLER_ID  to add caller number.
+			</div>
+		</div>
+ -->
+	</div>
+</div>
+

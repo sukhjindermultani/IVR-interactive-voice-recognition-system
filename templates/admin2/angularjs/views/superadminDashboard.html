@@ -1,0 +1,49 @@
+<div class="showClients" >
+<div style="margin-bottom:10px;">
+<div class="spiral" style="width:50%">
+				<img src="assets/admin/layout2/img/spiralcopy.png" width="70%">
+			</div>
+<div style="float:left; width:35%; margin-bottom:15px; background-color: white;">
+<div style="margin:5% 0 5% 5%;color:grey; ">
+<div>Total number of softphones: {{totalSoftphones}}</div>
+<div>Total number of SIP devices: 0</div>
+<div>Total number of DIDs: 0</div>
+<div>Total Number of Inbound Trunks: 0</div>
+<div>Total Number of Outbound Trunks: 0</div>
+<div>Total Number of Credits: ${{totalCredits}}</div>
+</div>
+</div>
+<div style="margin-top:11.5%;">
+<label style="float:right;"><input ng-model="search.name" placeholder="Search" class="form-control"></label>
+</div>
+</div>
+<table class="table table-hover" id = "accountsTableClient">
+          <thead class="accountTableHead">
+            <th>
+				<a href="#" style="color:inherit; text-decoration:none;" ng-click="sortType = 'name'; sortReverse = !sortReverse">
+				Account Name
+				<span ng-show="sortType == 'name' && !sortReverse" class="fa fa-caret-down"></span>
+				<span ng-show="sortType == 'name' && sortReverse" class="fa fa-caret-up"></span>
+			</th>
+            <th># SIP Devices </th>
+            <th># Softphones </th>
+            <th># DIDs </th>
+            <th># Inbound Trunks </th>
+            <th># Outbound Trunks  </th>
+			<th>Available Credits  </th>
+          </thead>
+		  
+		  <tbody ng-repeat="user in descendantList | orderBy:sortType:sortReverse | filter:search:strict">            
+                    <tr class ="accountsList" id="accounts_{{user.account_id}}" >
+                        <td>{{user.name}}</td>
+						<td>0</td>
+						<td>{{user.softphones}}</td>
+						<td>0</td>
+						<td>0</td>
+						<td>0</td>
+						<td>${{user.credits}}</td>
+                        
+                    </tr>           
+              </tbody>
+</table>
+</div>

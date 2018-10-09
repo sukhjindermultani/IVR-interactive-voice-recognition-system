@@ -1,0 +1,211 @@
+<div class="row" ng-controller="ResourcesController">	<!-- first row of tables  -->
+
+
+
+<script type="text/ng-template" id="addAgentModal.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Add Agent</h3>
+    </div>
+    <div class="modal-body">
+    	<!-- ng-submit="submitForm(addAgent.$valid)" --> <form role="form" class="form-horizontal" novalidate name="addAgent" >
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="agentName">Name</label>
+				<div class="col-md-6">
+					<input type="text" placeholder="Name" id="agentName" name="agentName" class="form-control" ng-model="newAgent.agentName" ng-required="true">
+				</div>
+			<p ng-show="addAgent.agentName.$invalid && !addAgent.agentName.$pristine" class="help-block">Your name is required.</p>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="agentEmail">Email</label>
+				<div class="col-md-6">
+					<input type="email" placeholder="Email" id="agentEmail" name="agentEmail" class="form-control" ng-model="newAgent.agentEmail" ng-required="true">
+				</div>
+			<p ng-show="addAgent.agentEmail.$error.required && !addAgent.agentEmail.$pristine" class="help-block">Your email is required.</p>
+			<p ng-show="addAgent.agentEmail.$error.email" class="help-block">Your email is not valid.</p>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="agentNumber">Number</label>
+				<div class="col-md-6">
+					<input type="tel" placeholder="Number" id="agentNumber" name="agentNumber" class="form-control" ng-model="newAgent.agentNumber" ng-required="true">
+				</div>
+			<p ng-show="addAgent.agentNumber.$invalid && !addAgent.agentNumber.$pristine" class="help-block">Your number is required.</p>
+			</div>
+		</form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="addAgentFn(addAgent.$valid)" ng-disabled="addAgent.$invalid">Add Agent</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+
+
+	<button class="btn btn-default" ng-click="open()">Add Agent</button>
+
+
+
+	<div class="col-lg-12">		<!-- First table div  -->
+	    <div class="portlet box grey">
+	        <div class="portlet-title">
+	            <div class="caption">
+	                <i class="fa fa-cogs"></i>Agents
+	            </div>
+	            <div class="tools">
+	                <a class="collapse" href="javascript:;" data-original-title="" title="">
+	                </a>
+	                <a class="config" data-toggle="modal" href="#portlet-config" data-original-title="" title="">
+	                </a>
+	                <a class="reload" href="javascript:;" data-original-title="" title="">
+	                </a>
+	            <!--    <a href="javascript:;" class="remove">
+	                </a>-->
+	            </div>
+	        </div>
+	        <div class="portlet-body">
+	            <div class="table-responsive">
+	                <table class="table table-bordered">
+	                    <thead>
+	                        <tr>
+	                            <th>
+	                                Name
+	                            </th>
+	                            <th>
+	                                Email
+	                            </th>
+	                            <th>
+	                                Delete
+	                            </th>
+	                        </tr>
+	                    </thead>
+	                    <tbody>
+	                        <tr ng-repeat = 'user in allAgents.data'>
+	                            <td>
+	                                {{user.first_name}}
+	                            </td>
+	                            <td>
+	                                {{user.email}}
+	                            </td>
+	                            <td>
+	                                <a class="btn purple" id="{{user.id}}" ng-click="delUser(user.id, $event, $index)">
+	                                    Delete <i class="fa fa-times"></i>
+	                                </a>
+	                            </td>
+	                        </tr>
+	                    </tbody>
+	                </table>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/ng-template" id="addSoundModal.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Add Sound</h3>
+    </div>
+    <div class="modal-body">
+    	<!-- ng-submit="submitForm(addAgent.$valid)" --> <form role="form" class="form-horizontal" novalidate name="addSound" >
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="soundName">Name</label>
+				<div class="col-md-6">
+					<input type="text" placeholder="Name" id="soundName" name="soundName" class="form-control" ng-model="newSound.soundName" ng-required="true">
+				</div>
+			<p ng-show="addSound.soundName.$invalid && !addSound.soundName.$pristine" class="help-block">Sound name is required.</p>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="soundBrowse">Browse</label>
+				<div class="col-md-6">
+					<input type="file" placeholder="Browse" id="soundBrowse" accept="audio/mpeg" name="soundBrowse" class="form-control" ng-model="newSound.soundBrowse" app-filereader ng-required="true"  >
+				</div>
+			<p ng-show="addSound.soundBrowse.$invalid && !addSound.soundBrowse.$pristine" class="help-block">Please select a sound</p>
+
+			{{chak}}
+			</div>
+		</form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="addSoundFn(addSound.$valid)" ng-disabled="addSound.$invalid">Add Sound</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+
+
+	<button class="btn btn-default" style="clear:both;" ng-click="AddFile()">Add Sound</button>
+
+
+
+	<div class="col-lg-12">		<!--  second table div  -->
+	    <div class="portlet box grey">
+	        <div class="portlet-title">
+	            <div class="caption">
+	                <i class="fa fa-cogs"></i>Sounds
+	            </div>
+	            <div class="tools">
+	                <a class="collapse" href="javascript:;" data-original-title="" title="">
+	                </a>
+	                <a class="config" data-toggle="modal" href="#portlet-config" data-original-title="" title="">
+	                </a>
+	                <a class="reload" href="javascript:;" data-original-title="" title="">
+	                </a>
+					<!--<a href="javascript:;" class="remove">
+	                </a>-->
+	            </div>
+	        </div>
+	        <div class="portlet-body">
+	            <div class="table-responsive">
+	                <table class="table table-bordered">
+	                    <thead>
+	                        <tr>
+	                            <th>
+	                                Name
+	                            </th>
+	                            <th>
+	                                Download
+	                            </th>
+	                            <th>
+	                                Delete
+	                            </th>
+	                        </tr>
+	                    </thead>
+	                    <tbody>
+	                        <tr ng-repeat="sound in sounds.data">
+	                            <td>
+	                                {{sound.name}}
+	                            </td>
+	                            <td>
+	                                <a data-toggle="modal" class="btn red" ng-click="downloadFile(sound.id, $event,sound.auth_token)">
+	                                    Download <i class="fa fa-edit"></i>
+									</a>
+	                            </td>
+	                            <td>
+	                                <a class="btn purple" ng-click="delFile(sound.id, $event)">
+	                                    Delete <i class="fa fa-times"></i>
+	                                </a>
+	                            </td>
+	                        </tr>
+
+	                    </tbody>
+	                </table>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+</div>
+
+
+

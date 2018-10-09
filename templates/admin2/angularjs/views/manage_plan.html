@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+
+	<div ng-controller="PlanController">
+
+		<h3 class="page-title">
+			Manage Plan
+		</h3>
+		<form class="form-horizontal">
+			<div class="dropdown">
+				<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">SELECT PLAN
+				<span class="caret"></span></button>
+				<ul class="dropdown-menu">
+					<li><a href="#">Gold</a></li>
+					<li><a href="#">Silver</a></li>
+					<li><a href="#">Diamond</a></li>
+		 			<li><a href="#">Platinum</a></li>
+					<li><a href="#">Fixed</a></li>
+				</ul>
+			</div>
+		<br>
+		<br>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="amount">Amount:</label>
+			<div class="col-md-3">
+				<input type="text" name="amount" class="form-control">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="realm">Channels:</label>
+			<div class="col-md-3">
+				<input type="text" name="channels" class="form-control">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="realm">Free minutes:</label>
+			<div class="col-md-3">
+				<input type="text" name="free_minutes" class="form-control">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="realm">Call Recording Feature:</label>
+			<div class="col-md-3">
+				<input type="text" name="cll_recording_feature" class="form-control">
+			</div>
+		</div>
+		<h2>Features</h2>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="realm"></label>
+			<div class="col-md-3">
+				<label class="checkbox"><input type="checkbox" name="feature1">web interface</label>
+				<label class="checkbox"><input type="checkbox" name="feature2">auto-receptionist</label>
+				<label class="checkbox"><input type="checkbox" name="feature3">call-reports</label>
+				<label class="checkbox"><input type="checkbox" name="feature4">call-out</label>
+				<label class="checkbox"><input type="checkbox" name="feature5">conference free pin</label>
+				<label class="checkbox"><input type="checkbox" name="feature6">automatic call recording</label>
+				<label class="checkbox"><input type="checkbox" name="feature7">call forwarding</label>
+				<label class="checkbox"><input type="checkbox" name="feature8">message alert</label>
+				<label class="checkbox"><input type="checkbox" name="feature9">missed call notification</label>
+				<label class="checkbox"><input type="checkbox" name="feature10">voice to email</label>
+				<label class="checkbox"><input type="checkbox" name="feature11">dtmf reports</label>
+				<label class="checkbox"><input type="checkbox" name="feature12">multilevel ivr</label>
+				<label class="checkbox"><input type="checkbox" name="feature13">user template</label>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="realm"></label>
+			<div class="col-md-6">
+				<button class="btn btn-primary" ng-click="forgot()">Save</button>
+			</div>
+		</div>
+		</form>
+	</div>
+</body>
+
+</html>

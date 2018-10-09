@@ -1,0 +1,1 @@
+MetronicApp.controller("GeneralPageController",["$rootScope","$scope","settings",function(a,b,c){b.$on("$viewContentLoaded",function(){Metronic.initAjax(),a.settings.layout.pageSidebarClosed=!1})}]);

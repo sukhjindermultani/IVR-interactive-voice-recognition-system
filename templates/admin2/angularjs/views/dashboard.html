@@ -1,0 +1,261 @@
+ <!-- BEGIN PAGE HEADER -->
+<h3 class="page-title">
+	Dashboard
+</h3>
+<div ng-if="RoleUser != 1" style="text-align:right;">DT Numbers :  {{AllDtNums}} </div>
+<div class="page-bar">
+	<ul class="page-breadcrumb">
+		<li>
+			<i class="fa fa-home"></i>
+			<a href="index.html">Home</a>
+			<i class="fa fa-angle-right"></i>
+		</li>
+		<li>
+			<a href="#">Dashboard</a>
+		</li>
+	</ul>
+	<!--<div class="page-toolbar">
+		<div class="btn-group pull-right">
+			<button type="button" class="btn btn-fit-height grey-salt dropdown-toggle" data-toggle="dropdown" dropdown-menu-hover data-delay="1000" data-close-others="true">
+			Actions <i class="fa fa-angle-down"></i>
+			</button>
+			<ul class="dropdown-menu pull-right" role="menu">
+				<li>
+					<a href="#">
+					<i class="icon-user"></i> New User </a>
+				</li>
+				<li>
+					<a href="#">
+					<i class="icon-present"></i> New Event <span class="badge badge-success">4</span>
+					</a>
+				</li>
+				<li>
+					<a href="#">
+					<i class="icon-basket"></i> New order </a>
+				</li>
+				<li class="divider">
+				</li>
+				<li>
+					<a href="#">
+					<i class="icon-flag"></i> Pending Orders <span class="badge badge-danger">4</span>
+					</a>
+				</li>
+				<li>
+					<a href="#">
+					<i class="icon-users"></i> Pending Users <span class="badge badge-warning">12</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div> -->
+</div>
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT -->
+<div ng-controller="DashboardController">
+<div ng-if="RoleUser == 1">
+<div  data-ng-include="'templates/admin2/angularjs/views/superadminDashboard.html'"></div>
+</div>
+	<!-- BEGIN DASHBOARD STATS -->
+<!--<div id="dashboardContent">-->
+<div ng-if="RoleUser != 1">
+	<div class="top_contents">
+		<div class="plans_dropdown">
+			<select ng-model='phnNumbers' required ng-options='option.value as option.name for option in phone_numbersOptions' ng-change="getcdrs()"></select>
+		</div>
+
+		<div class="query_from_to_div">
+			<input id="display_days_interval" type="text" value="{{date_from}} - {{date_to}}" readonly/>
+			<button class="calenderBtn" ng-click="show_dateOptions();"><i class="icon-calendar" ></i></button>
+			<input id="display_week_interval" type="text" value="week" />
+			<input id="display_month_interval" type="text" value="month" />
+			
+			<div class="query_interval">
+				<select ng-model='form' required ng-options='option.value as option.name for option in typeOptions' ng-change="getcdrs()"></select>
+			</div>
+		</div><!-- end of query_from_to_div div -->
+		<div class="top_right_div" ng-if="RoleUser != 3">
+			<div class="export">
+				<div class="export_label"> Export as </div>
+				<select ng-model="export_as" ng-change="exportData();">
+					<option value="csv">CSV</option>
+					<option value="excel">EXCEL</option>
+					<!-- <option value="pdf">PDF</option> -->
+				</select>
+			</div>
+			<div class="coins_status">
+				<div class="coins_left"><!--<span><i class="icon-money"></i><span>--> {{credit}} CREDIT LEFT </div>
+			</div>
+		</div><!-- end of top_right_div div -->
+	</div><!-- end of top_contents div -->
+
+	<div class="main_content">
+		<div class="callsShow">
+			<div class="main_right">
+				<div class="last_calls_block">
+					<div class="last_call_div"> 
+						<span class="last_call_text"> Last Calls & Recordings </span>
+					</div>
+				</div>
+				<ul class="calltop_label">
+					<li class="callee"> Date </li>
+					<li class="callee"> Caller </li>
+					<li class="callee"> User </li>
+					<li class="callsec"> Status </li>
+					<li class="callsec"> Call </li>
+					<li class="callTime"> Time </li>
+					<li class="calldnwl"> <i class="fa fa-download"></i> </li>
+				</ul>
+				<div id ="nocalls">
+					<div class="no_call_center_block">
+						<div class="no_calls"> No calls until now </div>
+					</div>
+				</div>
+				<div  id="yescalls">
+					<ul class="CallLog_details" >
+						<div ng-repeat="k in callsIn24Hrs">
+							<li class="callee"> {{k.date}} </li>
+							<li class="callee">  {{k.caller}} </li>
+							<li class="callee">  {{k.caller_number}} </li>
+
+							<li class="callsec" > 
+								<div ng-show = "k.type == 'NORMAL_CLEARING'" class="type_image">
+									<img src = "assets/admin/layout2/img/in.png">
+								</div>
+								<div ng-show = "k.type == 'missed'" class="type_image">
+									<img src = "assets/admin/layout2/img/miss.png">
+								</div>
+								<div ng-show = "k.type == 'outgoing'" class="type_image_out">
+									<img src = "assets/admin/layout2/img/out.png">
+								</div>
+							</li>
+							<li class="callsec"> {{k.duration}}</li>
+							<li ng-class="dwnldClass({{k.duration}});"> {{k.time}}</li>
+							<li class="calldnwl"  ng-show="{{k.duration}} > 0" ng-if="RoleUser != 3"><a href="http://43.252.243.10/kzr/call_recording_{{k.call_id}}.mp3" download ><i class="fa fa-download"></i></a> </li>
+						</div>
+					</ul>
+				</div>
+			</div>
+
+			<div class="Call_logsBlock">
+				<div class="last_calls_block">
+					<div class="last_call_div"> 
+						<span class="last_call_text"> Call Logs </span>
+					</div>
+				</div>
+				<ul class="callLogs_label">
+					<li class="callee"> Date </li>
+					<li class="callee"> Caller </li>
+					<li class="callee"> User </li>
+					<li class="callsec"> Status </li>
+					<li class="callsec"> Call </li>
+					<li class="callTime"> Time </li>
+					<li class="calldnwl"> <i class="fa fa-download"></i> </li>
+				</ul>
+				<div  id="callLogsList">
+					<ul class="CallLog_details" >
+						<div ng-repeat="k in CallLogs">
+							<li class="callee"> {{k.date}} </li>
+							<li class="callee"> {{k.caller}} </li>
+							<li class="callee"> {{k.caller_number}} </li>
+							<li class="callsec"> 
+								<div ng-show = "k.type == 'NORMAL_CLEARING'" class="type_image">
+									<img src = "assets/admin/layout2/img/in.png">
+								</div>
+								<div ng-show = "k.type == 'missed'" class="type_image">
+									<img src = "assets/admin/layout2/img/miss.png">
+								</div>
+								<div ng-show = "k.type == 'outgoing'" class="type_image_out">
+									<img src = "assets/admin/layout2/img/out.png">
+								</div>
+							</li>
+							<li class="callsec"> {{k.duration}}</li>
+							<li ng-class="dwnldClass({{k.duration}});"> {{k.time}}</li>
+							<li class="calldnwl"  ng-show="{{k.duration}} > 0" ng-if="RoleUser != 3"><a href="http://52.10.19.109/kzr/call_recording_{{k.call_id}}.mp3" download ><i class="fa fa-download"></i></a> </li>
+						</div>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="icon_info">
+			<ul class="icon_list">
+				<li class="call_answered_label1"><img src = "assets/admin/layout2/img/in.png"> Answered &nbsp; | &nbsp;</li>
+				<li class="call_answered_label1"><img src = "assets/admin/layout2/img/miss.png">   Missed &nbsp; | &nbsp;</li>
+				<li class="call_answered_label1"><img src = "assets/admin/layout2/img/voice.png"> Voicemail &nbsp; | &nbsp;</li>
+				<li class="call_answered_label1"><img src = "assets/admin/layout2/img/out.png"> Outgoing </li>
+			</ul>
+		</div>
+		<div class="callsCount">
+			<div class="spiral">
+				<img src="assets/admin/layout2/img/spiralcopy.png" width="425px">
+			</div>
+			<div class="main">
+
+				<div class="data_listing" ng-repeat="det in cdrDetail">
+					<div class="dates">
+						<div class="date"> {{det.date[2]}} </div>
+						<div class="day"> {{det.date[0]}} </div>
+						<div class="month_year"> {{det.date[1]}}'{{det.date[3]}} </div>
+					</div>
+					<ul class="call_results">
+						<li class="call_answered">
+							<div class="count" ng-click ="getCallLogs(det.date,'answered');"><span class="call_answered_count"> {{det.call_answered}} </span></div>
+							<div class="calls_details_label"> <img src = "assets/admin/layout2/img/in.png"> </div>
+						</li>
+						<li class="call_missed">
+							<div class="count" ng-click ="getCallLogs(det.date,'missed');"><span class="call_missed_count"> {{det.call_missed}} </span></div>
+							<div class="calls_details_label"> <img src = "assets/admin/layout2/img/miss.png"> </div>
+						</li>
+						<li class="voice_mail">
+							<div class="count"><span class="call_voice_count"> {{det.voice_mail}} </span></div>
+							<div class="calls_details_label"> <img src = "assets/admin/layout2/img/voice.png"> </div>
+						</li>
+						<li class="voice_mail">
+							<div class="count"><span class="call_voice_count" ng-click ="getCallLogs(det.date,'outbound');"> {{det.outbound_call}} </span></div>
+							<div class="calls_details_label"> <img src = "assets/admin/layout2/img/out.png"> </div>
+						</li>
+					</ul>
+				</div>			
+				<div class="call_info">
+					<ul class="icon_list">
+						<li class="total_calls">Total Calls : {{TotalCalls}}</li>
+						<li class="average_calls">Average Calls Per Day :  {{AverageCallsPerDay}} </li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+
+
+	</div>
+	<modal-dialog show="dateBlock" width="500px" height="160px" style="border-radius:10px !important">
+		<div class="modalInner">
+			<div class="from_div">
+					<span> From : </span><input id="date_from" type="text" datepickerfrom  data-ng-model="date_from" />
+					<!--<button class="calenderbtn" type="button" ng-click="getAccount();"><i class="icon-calendar"></i></button>-->
+			</div>
+			<div class="to_div">
+				<span> To :</span> <input id="date_to" type="text"   datepickerto   data-ng-model="date_to" />
+					<!--<button class="calenderbtn" type="button"><i class="icon-calendar" ng-click="getCdrs();"></i></button>-->
+			</div>
+		</div>
+			<br style="clear: left;" />
+			<div class="submitDiv">
+				<button class="submitbtn" align="center" ng-click="getcdrs()">
+					Submit
+				</button>
+				<button class="cancelbtn" align="center" ng-click="hide_dateOptions()">
+					Cancel
+				</button>
+			</div>
+		
+	</modal-dialog>
+<!--</div>-->
+</div>
+<!-- END MAIN CONTENT -->
+</div>
+<!-- BEGIN MAIN JS & CSS -->
+<script>
+	 //Index.init();    
+	 //Tasks.initDashboardWidget();
+</script>
+<!-- BEGIN MAIN JS & CSS -->

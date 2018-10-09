@@ -1,0 +1,124 @@
+<div class="row" ng-controller="SuperRecCallFLowController">
+	<div class="col-md-12" ng-if="flowsCall.flow">
+		<div>{{flowsCall.flow.module}} 
+		<div class="portlet box green" ng-repeat="(keysub,child) in flowsCall.flow.children" >
+			<div class="portlet-title">
+				<div class="caption" >
+					<i class="fa fa-gift"></i>{{keysub}} - {{child.module}}
+				</div>
+				<div class="tools">
+					<a class="collapse" href="javascript:;" data-original-title="" title="">
+					</a>
+					<a class="config" ng-click="openAction(child.module, child, keysub)" data-original-title="" title="">
+					</a>
+					<a class="remove" href="#">
+					</a>
+				</div>
+			</div>
+			<div class="portlet-body" style="display: block;" ng-include="'nestedPanel'" >
+			</div>
+		</div>
+</div>
+	</div>
+</div>
+
+
+<script type="text/ng-template" id="nestedPanel">
+	<div ng-hide="child.children">No Nested View Available</div>
+	{{$index}}
+	<div ng-if="child.children" ng-init="test1=test1+keysub;"><!-- ng-init="if(test1){test1+=''+keysub+'';}else{test1=''+keysub+'';}" -->
+		<div class="portlet box green" ng-repeat="(keysub,child) in child.children">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-gift"></i>{{test1}}{{keysub}} - {{child.module}}
+				</div>
+				<div class="tools">
+					<a class="collapse" href="javascript:;" data-original-title="" title="">
+					</a>
+					<a class="config" ng-click="openAction(child.module, child.children, test1, keysub)" data-original-title="" title="">
+					</a>
+					<a class="remove" href="#">
+					</a>
+				</div>
+			</div>
+			<div class="portlet-body" style="display: block;" ng-include="'nestedPanel'">
+				
+			</div>
+		</div>
+	</div>
+</script>
+
+
+
+<script type="text/ng-template" id="actionModal.html">
+<!--     <div class="modal-header">
+        <h3 class="modal-title">Add Agent</h3>
+    </div>
+ -->    <div class="modal-body">
+    	<!-- ng-submit="submitForm(addAgent.$valid)" --> <form role="form" class="form-horizontal" novalidate name="actionCall" >
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="agentName">Action</label>
+				<div class="col-md-6">
+					<select class="form-control" ng-options="item.label for item in values track by item.value" ng-model="action.selected">
+					</select>
+						<!-- {{action.selected.label}} -->
+				</div>
+			</div>
+			<div ng-if="action.selected.value == 'menu'">
+				<div class="form-group">
+					<label class="col-md-3 control-label" for="agentEmail">Menu number</label>
+					<div class="col-md-6">
+						<input type="number" placeholder="Add menu number" name="menuNumber" class="form-control" ng-model="actionCallData.menuNumber" ><!-- ng-required="true" -->
+					</div>
+				</div>
+			</div>
+
+			<!-- Agent Starts from here -->
+			<div ng-if="action.selected.value == 'user'">
+				<!-- <div class="form-group">
+					<label class="col-md-3 control-label" for="agentEmail">Agent name</label>
+					<div class="col-md-6">
+						<input type="text" placeholder="Agent name" name="agentName" class="form-control" ng-model="actionCallData.agentName" >
+					</div>
+				</div> -->
+				<div class="form-group">
+					<label class="col-md-3 control-label" for="agentName">Agent Name</label>
+					<div class="col-md-6">
+						<select name="agentName" id="agentName" ng-model="actionCallData.agentName" class="form-control" ng-options="item.username for item in agentsAllName track by item.id"></select>
+					</div>
+				</div>
+			</div>
+			<div ng-if="action.selected.value == 'play'">
+				<div class="form-group">
+					<label class="col-md-3 control-label" for="soundSelect">Sound</label>
+					<div class="col-md-6">
+						<select name="soundSelect" id="soundSelect" ng-model="actionCallData.soundSelect" class="form-control" ng-options="item.name for item in mediaAllName track by item.id"></select>
+						<!-- ng-required="true" -->
+					</div>
+				</div>
+				<!-- <div class="form-group">
+					<label class="col-md-3 control-label" for="agentEmail">Description</label>
+					<div class="col-md-6">
+						<input type="text" placeholder="Description" name="soundDesc" class="form-control" ng-model="actionCallData.soundDesc" >
+					</div>
+				</div> -->
+			</div>
+			<div ng-if="action.selected.value == 'voicemail'" >
+				<div class="form-group">
+					<label class="col-md-3 control-label" for="agentEmail">Voicemail number</label>
+					<div class="col-md-6">
+						<input type="text" placeholder="Voicemail" name="voicemailNumber" class="form-control" ng-model="actionCallData.voicemailNumber" ><!-- ng-required="true" -->
+					</div>
+				</div>
+			</div>
+			{{actionCallData}}
+		</form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="addAgentFn(addAgent.$valid)" ng-disabled="addAgent.$invalid">Save Changes</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+
+
+
